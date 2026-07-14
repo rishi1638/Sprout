@@ -11,13 +11,13 @@ export const dynamic = "force-dynamic";
 
 const ROLE_LABELS: Record<Profile["role"], string> = {
   admin: "Director",
-  staff: "Educator",
+  ece: "Educator",
   parent: "Parent",
 };
 
 const ROLE_VARIANTS = {
   admin: "accent",
-  staff: "default",
+  ece: "default",
   parent: "muted",
 } as const;
 
@@ -76,7 +76,7 @@ export default async function AdminStaffPage() {
                 <p className="font-bold">{profile.full_name || "Unnamed"}</p>
                 <p className="text-sm text-muted-foreground">
                   {profile.phone ? `${profile.phone} · ` : ""}
-                  {profile.role === "staff"
+                  {profile.role === "ece"
                     ? roomsByStaff.get(profile.id)?.join(", ") || "No rooms assigned"
                     : ROLE_LABELS[profile.role]}
                 </p>

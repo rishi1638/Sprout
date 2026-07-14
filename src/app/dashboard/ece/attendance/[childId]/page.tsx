@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export default async function AttendanceQrPage({ params }: { params: Promise<{ childId: string }> }) {
   const { childId } = await params;
-  await requireRole("staff");
+  await requireRole("ece");
   const supabase = await createClient();
 
   const { data: child } = await supabase.from("children").select("id, first_name, last_name").eq("id", childId).single();
@@ -20,7 +20,7 @@ export default async function AttendanceQrPage({ params }: { params: Promise<{ c
     <>
       <PageHeader title="QR check-in" description="Share this page for quick check-in and check-out." />
       <Button variant="ghost" asChild>
-        <Link href="/staff/attendance">
+        <Link href="/dashboard/ece/attendance">
           <ArrowLeft className="mr-2 size-4" /> Back to attendance
         </Link>
       </Button>
@@ -32,7 +32,7 @@ export default async function AttendanceQrPage({ params }: { params: Promise<{ c
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="rounded-lg border border-border bg-white p-4">
-            <QRCodeSVG value={`${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/staff/attendance/scan/${childId}`} size={220} />
+            <QRCodeSVG value={`${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/dashboard/ece/attendance/scan/${childId}`} size={220} />
           </div>
           <p className="text-sm text-muted-foreground">
             Parents or staff can scan this code to open a quick check-in or check-out flow for this child.

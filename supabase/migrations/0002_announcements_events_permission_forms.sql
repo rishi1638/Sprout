@@ -1,7 +1,15 @@
 -- Add announcements, scheduled events, and permission form workflows.
+-- Compatible with Postgres versions that do not support CREATE TYPE IF NOT EXISTS.
 
-create type if not exists public.announcement_audience as enum ('all', 'parents', 'staff');
-create type if not exists public.event_audience as enum ('all', 'parents', 'staff');
+do $$ begin
+  create type public.announcement_audience as enum ('all', 'parents', 'staff');
+exception when duplicate_object then null;
+end $$;
+
+do $$ begin
+  create type public.event_audience as enum ('all', 'parents', 'staff');
+exception when duplicate_object then null;
+end $$;
 
 create table if not exists public.announcements (
   id uuid primary key default gen_random_uuid(),
@@ -48,38 +56,55 @@ alter table public.events enable row level security;
 alter table public.permission_forms enable row level security;
 alter table public.permission_signatures enable row level security;
 
+drop policy if exists "announcements: admin all" on public.announcements;
+drop policy if exists "announcements: staff read" on public.announcements;
+drop policy if exists "announcements: parents read" on public.announcements;
+drop policy if exists "announcements: admin insert update delete" on public.announcements;
+
 create policy "announcements: admin all" on public.announcements
   for all using (public.is_admin()) with check (public.is_admin());
 create policy "announcements: staff read" on public.announcements
-  for select using (public.auth_role() = 'staff');
+  for select using (public.auth_role()::text in ('staff', 'ece'));
 create policy "announcements: parents read" on public.announcements
   for select using (public.auth_role() = 'parent' and audience in ('all', 'parents'));
-create policy "announcements: admin insert update delete" on public.announcements
-  for insert, update, delete using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists "events: admin all" on public.events;
+drop policy if exists "events: staff read" on public.events;
+drop policy if exists "events: parents read" on public.events;
+drop policy if exists "events: admin insert update delete" on public.events;
 
 create policy "events: admin all" on public.events
   for all using (public.is_admin()) with check (public.is_admin());
 create policy "events: staff read" on public.events
-  for select using (public.auth_role() = 'staff');
+  for select using (public.auth_role()::text in ('staff', 'ece'));
 create policy "events: parents read" on public.events
   for select using (public.auth_role() = 'parent' and audience in ('all', 'parents'));
-create policy "events: admin insert update delete" on public.events
-  for insert, update, delete using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists "permission_forms: admin all" on public.permission_forms;
+drop policy if exists "permission_forms: guardian read" on public.permission_forms;
+drop policy if exists "permission_forms: admin insert update delete" on public.permission_forms;
 
 create policy "permission_forms: admin all" on public.permission_forms
   for all using (public.is_admin()) with check (public.is_admin());
 create policy "permission_forms: guardian read" on public.permission_forms
   for select using (public.is_guardian_of(child_id));
-create policy "permission_forms: admin insert update delete" on public.permission_forms
-  for insert, update, delete using (public.is_admin()) with check (public.is_admin());
+
+drop policy if exists "permission_signatures: admin all" on public.permission_signatures;
+drop policy if exists "permission_signatures: guardian read own" on public.permission_signatures;
+drop policy if exists "permission_signatures: guardian sign" on public.permission_signatures;
 
 create policy "permission_signatures: admin all" on public.permission_signatures
   for all using (public.is_admin()) with check (public.is_admin());
 create policy "permission_signatures: guardian read own" on public.permission_signatures
   for select using (parent_id = auth.uid());
 create policy "permission_signatures: guardian sign" on public.permission_signatures
-  for insert with check (parent_id = auth.uid() and exists (
-    select 1 from public.guardianships g
-    where g.child_id = (select child_id from public.permission_forms where id = new.form_id)
-      and g.parent_id = auth.uid()
-  ));
+  for insert with check (
+    parent_id = auth.uid()
+    and exists (
+      select 1
+      from public.permission_forms pf
+      join public.guardianships g on g.child_id = pf.child_id
+      where pf.id = form_id
+        and g.parent_id = auth.uid()
+    )
+  );

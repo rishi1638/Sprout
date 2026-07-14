@@ -20,7 +20,7 @@ interface EnrollmentRow {
 }
 
 export default async function StaffAttendancePage() {
-  const profile = await requireRole("staff");
+  const profile = await requireRole("ece");
   const supabase = await createClient();
 
   const { data: assignments } = await supabase
@@ -79,7 +79,7 @@ export default async function StaffAttendancePage() {
         description="Check children in and out. Ratios update live."
         action={
           <Button asChild variant="outline">
-            <Link href="/staff/attendance/qr">
+            <Link href="/dashboard/ece/attendance/qr">
               <QrCode className="mr-2 size-4" /> QR codes
             </Link>
           </Button>

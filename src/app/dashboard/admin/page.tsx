@@ -14,7 +14,7 @@ export default async function AdminOverviewPage() {
 
   const [childrenRes, staffRes, ratiosRes, unpaidRes] = await Promise.all([
     supabase.from("children").select("id", { count: "exact", head: true }).eq("enrollment_status", "enrolled"),
-    supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "staff"),
+    supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "ece"),
     supabase.from("classroom_ratios").select("*").order("name"),
     supabase.from("invoices").select("amount_cents").eq("status", "unpaid"),
   ]);

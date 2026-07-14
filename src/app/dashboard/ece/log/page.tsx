@@ -17,7 +17,7 @@ interface EnrollmentRow {
 }
 
 export default async function StaffLogPage() {
-  const profile = await requireRole("staff");
+  const profile = await requireRole("ece");
   const supabase = await createClient();
 
   const { data: assignments } = await supabase

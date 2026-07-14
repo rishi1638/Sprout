@@ -20,7 +20,7 @@ export async function requireRole(role: UserRole): Promise<Profile> {
 
   if (!profile) redirect("/login");
   if (profile.role !== role) {
-    redirect(profile.role === "admin" ? "/admin" : profile.role === "staff" ? "/staff" : "/parent");
+    redirect(profile.role === "admin" ? "/dashboard/admin" : profile.role === "ece" ? "/dashboard/ece" : "/dashboard/parent");
   }
   return profile;
 }

@@ -60,9 +60,29 @@ export function ClassroomFormDialog({ classroom, trigger }: { classroom?: Classr
       min_age_months: values.min_age_months || null,
       max_age_months: values.max_age_months || null,
     };
-    const { error } = classroom
-      ? await supabase.from("classrooms").update(payload).eq("id", classroom.id)
-      : await supabase.from("classrooms").insert(payload);
+
+    let error;
+    if (classroom) {
+      ({ error } = await supabase.from("classrooms").update(payload).eq("id", classroom.id));
+    } else {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const { data: center } = await supabase
+        .from("centers")
+        .select("id")
+        .or(`admin_id.eq.${user?.id},admin_id.is.null`)
+        .limit(1)
+        .maybeSingle();
+
+      if (!center?.id) {
+        setSaving(false);
+        toast.error("No daycare center found. Run the onboarding migration first.");
+        return;
+      }
+
+      ({ error } = await supabase.from("classrooms").insert({ ...payload, center_id: center.id }));
+    }
     setSaving(false);
     if (error) {
       toastError(classroom ? "Couldn't save classroom" : "Couldn't create classroom", error);
@@ -189,6 +209,9 @@ export function AssignStaffDialog({ classroom, staff, assignedStaffIds, trigger 
       classroom_id: values.classroom_id,
       staff_id: values.staff_id,
     });
+    if (!error) {
+      await supabase.from("classrooms").update({ instructor_id: values.staff_id }).eq("id", values.classroom_id);
+    }
     setSaving(false);
     if (error) {
       toastError("Couldn't assign educator", error);
@@ -293,6 +316,9 @@ export function EnrollChildDialog({ classroom, children_options, trigger }: Enro
       child_id: values.child_id,
       classroom_id: values.classroom_id,
     });
+    if (!error) {
+      await supabase.from("children").update({ classroom_id: values.classroom_id }).eq("id", values.child_id);
+    }
     setSaving(false);
     if (error) {
       toastError("Couldn't enroll child", error);

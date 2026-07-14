@@ -1,6 +1,7 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
-export type UserRole = "admin" | "staff" | "parent";
+export type UserRole = "admin" | "ece" | "parent";
+export type InvitationStatus = "pending" | "accepted" | "expired";
 export type EnrollmentStatus = "enrolled" | "waitlisted" | "withdrawn";
 export type ActivityType = "meal" | "nap" | "diaper" | "bathroom" | "note" | "photo";
 export type InvoiceStatus = "unpaid" | "paid" | "void";
@@ -18,6 +19,7 @@ export interface Database {
           avatar_url: string | null;
           quick_pin: string | null;
           created_at: string;
+          updated_at: string;
         };
         Insert: {
           id: string;
@@ -27,6 +29,7 @@ export interface Database {
           avatar_url?: string | null;
           quick_pin?: string | null;
           created_at?: string;
+          updated_at?: string;
         };
         Update: {
           id?: string;
@@ -35,6 +38,31 @@ export interface Database {
           phone?: string | null;
           avatar_url?: string | null;
           quick_pin?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      centers: {
+        Row: {
+          id: string;
+          name: string;
+          address: string | null;
+          admin_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          address?: string | null;
+          admin_id?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          address?: string | null;
+          admin_id?: string | null;
           created_at?: string;
         };
         Relationships: [];
@@ -45,6 +73,7 @@ export interface Database {
           first_name: string;
           last_name: string;
           dob: string;
+          classroom_id: string | null;
           enrollment_status: EnrollmentStatus;
           allergies: string[];
           immunizations: Json;
@@ -57,6 +86,7 @@ export interface Database {
           first_name: string;
           last_name: string;
           dob: string;
+          classroom_id?: string | null;
           enrollment_status?: EnrollmentStatus;
           allergies?: string[];
           immunizations?: Json;
@@ -69,12 +99,79 @@ export interface Database {
           first_name?: string;
           last_name?: string;
           dob?: string;
+          classroom_id?: string | null;
           enrollment_status?: EnrollmentStatus;
           allergies?: string[];
           immunizations?: Json;
           medical_notes?: string | null;
           photo_url?: string | null;
           created_at?: string;
+        };
+        Relationships: [];
+      };
+      parent_child_relationships: {
+        Row: {
+          id: string;
+          parent_id: string;
+          child_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          parent_id: string;
+          child_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          parent_id?: string;
+          child_id?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      invitations: {
+        Row: {
+          id: string;
+          email: string;
+          token: string;
+          role: UserRole;
+          center_id: string;
+          classroom_id: string | null;
+          child_id: string | null;
+          status: InvitationStatus;
+          invited_by: string | null;
+          created_at: string;
+          accepted_at: string | null;
+          expires_at: string;
+        };
+        Insert: {
+          id?: string;
+          email: string;
+          token: string;
+          role: UserRole;
+          center_id: string;
+          classroom_id?: string | null;
+          child_id?: string | null;
+          status?: InvitationStatus;
+          invited_by?: string | null;
+          created_at?: string;
+          accepted_at?: string | null;
+          expires_at?: string;
+        };
+        Update: {
+          id?: string;
+          email?: string;
+          token?: string;
+          role?: UserRole;
+          center_id?: string;
+          classroom_id?: string | null;
+          child_id?: string | null;
+          status?: InvitationStatus;
+          invited_by?: string | null;
+          created_at?: string;
+          accepted_at?: string | null;
+          expires_at?: string;
         };
         Relationships: [];
       };
@@ -134,6 +231,8 @@ export interface Database {
           capacity: number;
           min_age_months: number | null;
           max_age_months: number | null;
+          center_id: string;
+          instructor_id: string | null;
           created_at: string;
         };
         Insert: {
@@ -143,6 +242,8 @@ export interface Database {
           capacity: number;
           min_age_months?: number | null;
           max_age_months?: number | null;
+          center_id: string;
+          instructor_id?: string | null;
           created_at?: string;
         };
         Update: {
@@ -152,6 +253,8 @@ export interface Database {
           capacity?: number;
           min_age_months?: number | null;
           max_age_months?: number | null;
+          center_id?: string;
+          instructor_id?: string | null;
           created_at?: string;
         };
         Relationships: [];
@@ -491,9 +594,27 @@ export interface Database {
         Args: Record<string, never>;
         Returns: UserRole;
       };
+      get_invitation_by_token: {
+        Args: { lookup_token: string };
+        Returns: {
+          id: string;
+          email: string;
+          token: string;
+          role: UserRole;
+          center_id: string;
+          classroom_id: string | null;
+          child_id: string | null;
+          status: InvitationStatus;
+          invited_by: string | null;
+          created_at: string;
+          accepted_at: string | null;
+          expires_at: string;
+        } | null;
+      };
     };
     Enums: {
       user_role: UserRole;
+      invitation_status: InvitationStatus;
       enrollment_status: EnrollmentStatus;
       activity_type: ActivityType;
       invoice_status: InvoiceStatus;

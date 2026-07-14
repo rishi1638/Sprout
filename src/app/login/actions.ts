@@ -30,9 +30,9 @@ function getDemoCredentials() {
 }
 
 function getHomeForRole(role?: string) {
-  if (role === "admin") return "/admin";
-  if (role === "staff") return "/staff";
-  return "/parent";
+  if (role === "admin") return "/dashboard/admin";
+  if (role === "ece") return "/dashboard/ece";
+  return "/dashboard/parent";
 }
 
 async function ensureDemoAdminAccount() {

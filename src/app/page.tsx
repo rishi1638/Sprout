@@ -13,10 +13,10 @@ export default async function RootPage() {
 
   switch (profile?.role) {
     case "admin":
-      redirect("/admin");
-    case "staff":
-      redirect("/staff");
+      redirect("/dashboard/admin");
+    case "ece":
+      redirect("/dashboard/ece");
     default:
-      redirect("/parent");
+      redirect("/dashboard/parent");
   }
 }

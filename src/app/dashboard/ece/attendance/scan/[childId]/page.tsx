@@ -59,7 +59,7 @@ export default function AttendanceScanPage({ params }: { params: Promise<{ child
     }
 
     setBusy(false);
-    router.replace("/staff/attendance");
+    router.replace("/dashboard/ece/attendance");
   }
 
   return (

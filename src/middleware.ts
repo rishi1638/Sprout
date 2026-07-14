@@ -3,9 +3,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { Database, UserRole } from "@/lib/database.types";
 
 const ROLE_HOME: Record<UserRole, string> = {
-  admin: "/admin",
-  staff: "/staff",
-  parent: "/parent",
+  admin: "/dashboard/admin",
+  ece: "/dashboard/ece",
+  parent: "/dashboard/parent",
 };
 
 export async function middleware(request: NextRequest) {
@@ -35,7 +35,10 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const { pathname } = request.nextUrl;
-  const isProtected = ["/admin", "/staff", "/parent"].some((prefix) => pathname.startsWith(prefix));
+  const isProtected = ["/dashboard/admin", "/dashboard/ece", "/dashboard/parent"].some((prefix) =>
+    pathname.startsWith(prefix)
+  );
+  const isAuthPage = pathname === "/login" || pathname === "/register";
 
   if (!user) {
     if (isProtected) {
@@ -47,11 +50,7 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
+  const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single();
 
   const role: UserRole = profile?.role ?? "parent";
   const home = ROLE_HOME[role];
@@ -61,6 +60,10 @@ export async function middleware(request: NextRequest) {
     url.pathname = home;
     url.search = "";
     return NextResponse.redirect(url);
+  }
+
+  if (isAuthPage && pathname === "/register" && !request.nextUrl.searchParams.get("token")) {
+    return response;
   }
 
   if (isProtected && !pathname.startsWith(home)) {
@@ -74,5 +77,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/login", "/admin/:path*", "/staff/:path*", "/parent/:path*"],
+  matcher: ["/", "/login", "/register", "/dashboard/admin/:path*", "/dashboard/ece/:path*", "/dashboard/parent/:path*"],
 };

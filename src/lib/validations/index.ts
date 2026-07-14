@@ -138,7 +138,7 @@ export type ChildPlanValues = z.infer<typeof childPlanSchema>;
 export const staffProfileSchema = z.object({
   full_name: z.string().trim().min(1, "Full name is required."),
   phone: z.string().trim(),
-  role: z.enum(["admin", "staff", "parent"]),
+  role: z.enum(["admin", "ece", "parent"]),
 });
 export type StaffProfileValues = z.infer<typeof staffProfileSchema>;
 

@@ -11,7 +11,7 @@ import { RealtimeRefresher } from "@/components/shared/realtime-refresher";
 export const dynamic = "force-dynamic";
 
 export default async function StaffHomePage() {
-  const profile = await requireRole("staff");
+  const profile = await requireRole("ece");
   const supabase = await createClient();
 
   const { data: assignments } = await supabase

@@ -10,7 +10,7 @@ import { QRCodeSVG } from "qrcode.react";
 export const dynamic = "force-dynamic";
 
 export default async function AttendanceQrIndexPage() {
-  await requireRole("staff");
+  await requireRole("ece");
   const supabase = await createClient();
   const { data: enrollments } = await supabase
     .from("enrollments")
@@ -43,7 +43,7 @@ export default async function AttendanceQrIndexPage() {
     <>
       <PageHeader title="QR codes" description="Open a child-specific attendance page for quick check-in and check-out." />
       <Button variant="ghost" asChild>
-        <Link href="/staff/attendance">
+        <Link href="/dashboard/ece/attendance">
           <ArrowLeft className="mr-2 size-4" /> Back to attendance
         </Link>
       </Button>
@@ -58,7 +58,7 @@ export default async function AttendanceQrIndexPage() {
             <CardContent className="space-y-3">
               <div className="rounded-lg border border-border bg-white p-4">
                 <QRCodeSVG
-                  value={`${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/staff/attendance/scan/${row.child_id}`}
+                  value={`${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/dashboard/ece/attendance/scan/${row.child_id}`}
                   size={180}
                 />
               </div>
@@ -66,7 +66,7 @@ export default async function AttendanceQrIndexPage() {
                 {row.classroom?.name ? `Classroom: ${row.classroom.name}` : "Classroom: not assigned"}
               </p>
               <Button asChild variant="outline" size="sm">
-                <Link href={`/staff/attendance/${row.child_id}`}>Open QR page</Link>
+                <Link href={`/dashboard/ece/attendance/${row.child_id}`}>Open QR page</Link>
               </Button>
             </CardContent>
           </Card>

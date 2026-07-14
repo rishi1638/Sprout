@@ -14,6 +14,9 @@ export type PermissionForm = Tables<"permission_forms">;
 export type PermissionSignature = Tables<"permission_signatures">;
 export type EmergencyContact = Tables<"emergency_contacts">;
 export type Guardianship = Tables<"guardianships">;
+export type Center = Tables<"centers">;
+export type Invitation = Tables<"invitations">;
+export type ParentChildRelationship = Tables<"parent_child_relationships">;
 
 export interface MealDetails {
   food: string;

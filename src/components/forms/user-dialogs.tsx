@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 import { useToastError } from "@/hooks/use-toast-error";
 import { staffProfileSchema, type StaffProfileValues } from "@/lib/validations";
-import { createUserAction } from "@/app/admin/staff/actions";
+import { createUserAction } from "@/app/dashboard/admin/staff/actions";
 import type { Profile } from "@/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,7 +29,7 @@ const newUserSchema = z.object({
   email: z.string().trim().email("Enter a valid email address."),
   password: z.string().min(8, "Initial password needs at least 8 characters."),
   full_name: z.string().trim().min(1, "Full name is required."),
-  role: z.enum(["admin", "staff", "parent"]),
+  role: z.enum(["admin", "ece", "parent"]),
 });
 type NewUserValues = z.infer<typeof newUserSchema>;
 
@@ -40,7 +40,7 @@ export function CreateUserDialog({ trigger }: { trigger: React.ReactNode }) {
 
   const form = useForm<NewUserValues>({
     resolver: zodResolver(newUserSchema),
-    defaultValues: { email: "", password: "", full_name: "", role: "staff" },
+    defaultValues: { email: "", password: "", full_name: "", role: "ece" },
   });
 
   const onSubmit = form.handleSubmit((values) => {
@@ -51,7 +51,7 @@ export function CreateUserDialog({ trigger }: { trigger: React.ReactNode }) {
         return;
       }
       toast.success("Account created", { description: "Share the email and initial password with them securely." });
-      form.reset({ email: "", password: "", full_name: "", role: "staff" });
+      form.reset({ email: "", password: "", full_name: "", role: "ece" });
       setOpen(false);
       router.refresh();
     });
@@ -87,7 +87,7 @@ export function CreateUserDialog({ trigger }: { trigger: React.ReactNode }) {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="staff">Educator</SelectItem>
+                  <SelectItem value="ece">Educator</SelectItem>
                   <SelectItem value="parent">Parent</SelectItem>
                   <SelectItem value="admin">Director</SelectItem>
                 </SelectContent>
@@ -165,7 +165,7 @@ export function EditProfileDialog({ profile, trigger }: { profile: Profile; trig
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="staff">Educator</SelectItem>
+                  <SelectItem value="ece">Educator</SelectItem>
                   <SelectItem value="parent">Parent</SelectItem>
                   <SelectItem value="admin">Director</SelectItem>
                 </SelectContent>

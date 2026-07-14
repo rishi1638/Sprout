@@ -37,7 +37,7 @@ export default async function AdminClassroomsPage() {
     await Promise.all([
       supabase.from("classrooms").select("*").order("name"),
       supabase.from("classroom_ratios").select("*"),
-      supabase.from("profiles").select("id, full_name").eq("role", "staff").order("full_name"),
+      supabase.from("profiles").select("id, full_name").eq("role", "ece").order("full_name"),
       supabase.from("staff_assignments").select("classroom_id, staff_id, profiles(id, full_name)"),
       supabase
         .from("enrollments")

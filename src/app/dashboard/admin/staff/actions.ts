@@ -9,7 +9,7 @@ const createUserSchema = z.object({
   email: z.string().trim().email(),
   password: z.string().min(8),
   full_name: z.string().trim().min(1),
-  role: z.enum(["admin", "staff", "parent"]),
+  role: z.enum(["admin", "ece", "parent"]),
 });
 
 export interface CreateUserResult {
@@ -52,6 +52,6 @@ export async function createUserAction(input: unknown): Promise<CreateUserResult
     await admin.from("profiles").update({ full_name, role }).eq("id", data.user.id);
   }
 
-  revalidatePath("/admin/staff");
+  revalidatePath("/dashboard/admin/staff");
   return { ok: true, message: `Account created for ${full_name}.` };
 }
