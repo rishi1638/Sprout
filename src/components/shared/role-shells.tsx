@@ -3,13 +3,16 @@
 import {
   Baby,
   CalendarCheck,
+  ClipboardCheck,
   ClipboardList,
   Home,
   LayoutDashboard,
+  Megaphone,
   Receipt,
   School,
   UserRound,
   Users,
+  CalendarDays,
 } from "lucide-react";
 import { AppShell, type NavItem } from "@/components/shared/app-shell";
 
@@ -18,6 +21,9 @@ const ADMIN_ITEMS: NavItem[] = [
   { href: "/admin/children", label: "Children", icon: Baby },
   { href: "/admin/classrooms", label: "Classrooms", icon: School },
   { href: "/admin/staff", label: "Staff", icon: Users },
+  { href: "/admin/announcements", label: "Announcements", icon: Megaphone },
+  { href: "/admin/events", label: "Events", icon: CalendarDays },
+  { href: "/admin/permission-forms", label: "Forms", icon: ClipboardCheck },
   { href: "/admin/billing", label: "Billing", icon: Receipt },
 ];
 
@@ -29,6 +35,9 @@ const STAFF_ITEMS: NavItem[] = [
 
 const PARENT_ITEMS: NavItem[] = [
   { href: "/parent", label: "Feed", icon: Home },
+  { href: "/parent/announcements", label: "Announcements", icon: Megaphone },
+  { href: "/parent/events", label: "Events", icon: CalendarDays },
+  { href: "/parent/permission-forms", label: "Forms", icon: ClipboardCheck },
   { href: "/parent/children", label: "My children", icon: UserRound },
   { href: "/parent/billing", label: "Billing", icon: Receipt },
 ];

@@ -8,6 +8,10 @@ export type Activity = Tables<"activities">;
 export type Attendance = Tables<"attendance">;
 export type BillingPlan = Tables<"billing_plans">;
 export type Invoice = Tables<"invoices">;
+export type Announcement = Tables<"announcements">;
+export type Event = Tables<"events">;
+export type PermissionForm = Tables<"permission_forms">;
+export type PermissionSignature = Tables<"permission_signatures">;
 export type EmergencyContact = Tables<"emergency_contacts">;
 export type Guardianship = Tables<"guardianships">;
 

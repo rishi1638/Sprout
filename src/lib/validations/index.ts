@@ -88,6 +88,38 @@ export const noteLogSchema = z.object({
 });
 export type NoteLogValues = z.infer<typeof noteLogSchema>;
 
+export const announcementSchema = z.object({
+  title: z.string().trim().min(1, "Title is required."),
+  message: z.string().trim().min(1, "Message is required."),
+  audience: z.enum(["all", "parents", "staff"]),
+  active: z.boolean(),
+});
+export type AnnouncementValues = z.infer<typeof announcementSchema>;
+
+export const eventSchema = z
+  .object({
+    title: z.string().trim().min(1, "Title is required."),
+    description: z.string().trim(),
+    start_at: z.string().min(1, "Start time is required."),
+    end_at: z.string().min(1, "End time is required."),
+    classroom_id: z.string().optional(),
+    audience: z.enum(["all", "parents", "staff"]),
+  })
+  .refine((values) => new Date(values.end_at) > new Date(values.start_at), {
+    message: "Event end must be after the start time.",
+    path: ["end_at"],
+  });
+export type EventValues = z.infer<typeof eventSchema>;
+
+export const permissionFormSchema = z.object({
+  title: z.string().trim().min(1, "Title is required."),
+  description: z.string().trim(),
+  child_id: z.string().uuid("Select a child."),
+  due_date: z.string().min(1, "Due date is required."),
+  active: z.boolean(),
+});
+export type PermissionFormValues = z.infer<typeof permissionFormSchema>;
+
 export const billingPlanSchema = z.object({
   name: z.string().trim().min(1, "Plan name is required."),
   amount_dollars: z.coerce.number().min(0, "Amount cannot be negative."),

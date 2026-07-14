@@ -351,6 +351,123 @@ export interface Database {
         };
         Relationships: [];
       };
+      announcements: {
+        Row: {
+          id: string;
+          title: string;
+          message: string;
+          audience: string;
+          author_id: string;
+          active: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          message: string;
+          audience?: string;
+          author_id: string;
+          active?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          message?: string;
+          audience?: string;
+          author_id?: string;
+          active?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      events: {
+        Row: {
+          id: string;
+          title: string;
+          description: string | null;
+          start_at: string;
+          end_at: string;
+          classroom_id: string | null;
+          audience: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          description?: string | null;
+          start_at: string;
+          end_at: string;
+          classroom_id?: string | null;
+          audience?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          description?: string | null;
+          start_at?: string;
+          end_at?: string;
+          classroom_id?: string | null;
+          audience?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      permission_forms: {
+        Row: {
+          id: string;
+          title: string;
+          description: string | null;
+          child_id: string;
+          due_date: string;
+          active: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          description?: string | null;
+          child_id: string;
+          due_date: string;
+          active?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          description?: string | null;
+          child_id?: string;
+          due_date?: string;
+          active?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      permission_signatures: {
+        Row: {
+          id: string;
+          form_id: string;
+          parent_id: string;
+          approved: boolean;
+          signed_at: string;
+        };
+        Insert: {
+          id?: string;
+          form_id: string;
+          parent_id: string;
+          approved?: boolean;
+          signed_at?: string;
+        };
+        Update: {
+          id?: string;
+          form_id?: string;
+          parent_id?: string;
+          approved?: boolean;
+          signed_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       classroom_ratios: {
